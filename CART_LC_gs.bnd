@@ -1,0 +1,306 @@
+
+// Cell type: Tumour
+node TUM {
+  rate_up = 0.0;
+  rate_down = 0.0;
+}
+
+
+    // Cell type: CAR T
+node CART {
+  rate_up = 0.0;
+  rate_down = 0.0;
+}
+
+// node IL2 {
+//  rate_up = 0.0;
+//  rate_down = 0.0;
+//}
+
+// LC: IL2 should be activated by IL2ge as we did for PD1ex, which is activated by PDCD1ge
+// no need for intermediates?
+// In the model, we link IL2ge to IL2R through $IL2up
+
+
+node Death {
+  rate_up = CASP3_tum ? 1.0 : 0.0;
+  rate_down = 0.0;
+}
+
+node Division {
+  rate_up = 0.0;
+  rate_down = 0.0;
+}
+    // to be filled
+
+
+node TA_tum {
+  rate_up = 0.0;
+  rate_down = (! TUM) ? $Fast : 0.0 ;
+}
+
+node PDL1L2_tum {
+  rate_up = 0.0;
+  rate_down = (! TUM) ? $Fast : 0.0;
+}
+
+node CD8086_tum {
+  rate_up = 0.0;
+  rate_down = (! TUM) ? $Fast : 0.0;
+}
+
+node IS_tum {
+  rate_up = !CASP3_tum ? 1.0 : 0.0;
+  rate_down = CASP3_tum ? 1.0 :  0.0;
+}
+
+node FAS_tum {
+  rate_up = IS_tum ? $FASL_up : 0.0;
+  rate_down = (! TUM) ? $Fast : (! IS_tum ? 1.0 : 0.0);
+}
+
+node CASP3_tum {
+  rate_up = FAS_tum ? $Perforin_up :  0.0;
+  rate_down = (! TUM) ? $Fast : (! FAS_tum ? 1.0 : 0.0);
+}
+
+// node Death {
+//  logic = CASP3_tum;
+//}
+// LC: this is death no longer TAPOP
+
+node PD1 {
+  rate_up = (CART & PDCD1ge) ? ($PDL1L2_tum_up * $IS_tum_up) : 0.0;
+  rate_down = !CART ? $Fast : $DegPD1;  
+
+}
+// LC: do we need an intermediate for PD1? I would use PDCD1ge instead of PD1ex
+
+node CTLA4 {
+  rate_up = (CART & SHP2) ? ($CD8086_tum_up * $IS_tum_up) : 0.0;
+  rate_down = !CART ? $Fast : $DegCTLA4;  
+
+}
+
+node SCFV {
+  rate_up = CART ? ($TA_tum_up * $IS_tum_up) : 0.0;
+  rate_down = !CART ? $Fast : 0.0;  
+}
+
+node IL2R {
+  rate_up = CART ? ($IL2_up) : 0.0;
+  rate_down = !CART ? $Fast : 0.0;  
+}
+// LC: should be activated by IL2ge
+
+
+//node PD1ex {
+//  rate_up = PDCD1ge ? $Trans : 0.0;
+//  rate_down = PDCD1ge ? 0.0 : $Trans;
+//}
+// LC: Why not put PDCD1ge ==> PD1
+
+node SHP2 {
+  logic = PD1 | CTLA4;
+}
+
+
+node SHP1 {
+//  logic = (PD1 & !SHP2) | (LCK & !ERK);
+  logic = (PD1 & !SHP2) | LCK;
+// LC: why do we need !ERK? Check Stefanova et al, Immunology 2003
+// !SHP2: because it is either through SHIP1 or SHP2 and they re activated through different pathways
+}
+
+node CD28 {
+  logic = SCFV & LCK;
+}
+
+node CD3zeta {
+//  logic = (LCK & CD28);  
+  logic = (LCK & CD28) & !(SHP1 | SHP2); 
+}
+// KEGG shows an inhibition from SHIP1 so it mirrors ZAP70 regulation
+// to check with experimental evidence
+
+node LCK {
+//  logic = !LCK & ((!SHP1 | (SHP1 & ERK)) & ((!SHP2 | (SHP2 & ERK)))); 
+  logic = ((!SHP1 | (SHP1 & ERK)) & ((!SHP2 | (SHP2 & ERK))));
+}
+// LC: why !LCK?
+
+node ZAP70 {
+  logic = CD3zeta & LCK & !(SHP1 | SHP2);  
+}
+
+node JAK1 {
+  logic = IL2R;  
+}
+
+node LAT {
+//  logic = PD1;  
+  logic = PD1 | ZAP70 | P38;
+}
+// ZAP70 activates it through phosphorylation as it does to SLP76
+
+node PLCgamma1 {
+//  logic = SLP76;  
+  logic = SLP76 | LAT;  
+}
+
+node SLP76 {
+  logic = ZAP70 | LAT;  
+}
+
+node DAG {
+  logic = PLCgamma1;  
+}
+
+node PDCD1ge {
+  logic = (AP1 & NFAT) | (STAT5 & NFAT);  
+}
+
+
+//node IP3 {
+//  logic = PLCgamma1;  
+//}
+// Suppress IP3, temporary decision
+
+//node WASPCDC42 {
+//  logic = SLP76;  
+//}
+// Suppress for now
+
+node P38 {
+//  logic = SLP76;  
+  logic = ZAP70 | LAT;
+}
+
+node PKCtheta {
+//  logic = (DAG | PDPK1) & !(SHP1 | SHP2);  
+  logic = (DAG | PI3K | GRB2SOS); 
+}
+// suppress PDPK1
+
+node PI3K {
+  logic = CD28 | CTLA4;  
+}
+//LC: SHIP1 inhibits PI3K?
+
+//node PDPK1 {
+//  logic = PI3K;  
+//}
+// Simplified 
+
+//node AKT {
+//  logic = PI3K & PDPK1;  
+//}
+// Simplified
+
+node MTORC1 {
+//  logic = AKT;  
+  logic = PI3K;  
+}
+
+node RASGRP {
+//  logic = DAG;  
+  logic = DAG | GRB2SOS; 
+}
+
+node GRB2SOS {
+  logic = LAT | JAK1 | CD28;  
+}
+
+node ERK {
+//  logic = (RASGRP | GRB2SOS) & !(SHP1 | SHP2);  
+  logic = (RASGRP);  
+}
+
+//node Calcium {
+//  logic = IP3;  
+//}
+// LC: do we need calcium?
+
+//node Calmodulin {
+//  logic = Calcium;  
+//}
+
+node Calcineurin {
+//  logic = Calcium & Calmodulin;  
+  logic = PLCgamma1; 
+}
+
+
+node CFOS {
+//  logic = ERK | CREB;  
+  logic = ERK;  
+}
+
+node CJUN {
+//  logic = PKCtheta | WASPCDC42;  
+  logic = PKCtheta;  
+}
+// Suppress for now
+
+node AP1 {
+//  logic = CFOS & CJUN & !dNFAT;  
+  logic = CFOS & CJUN;  
+}
+
+//node BATF {
+//  logic = PD1;  
+//}
+
+node NFKB {
+  logic = PKCtheta;  
+}
+
+node NFAT {
+  logic = Calcineurin | P38;  
+
+}
+
+node dNFAT {
+  logic = (NFAT & !AP1) | (NFAT & !STAT5);  
+}
+
+//node CREB {
+//  logic = P38 | Calmodulin;  
+//}
+
+node STAT5 {
+  logic = IL2R & JAK1;  
+}
+
+
+node IL2ge {
+  logic = AP1 & NFKB & NFAT;  
+}
+// IL2ge is an output/ So what?
+
+
+
+node CYTOGRAN {
+//  logic = WASPCDC42 & PKCtheta & Calcium & PI3K;  
+  logic = PKCtheta & PI3K;  
+}
+
+node FASL {
+  logic = CYTOGRAN;  
+}
+
+node Perforin {
+  logic = CYTOGRAN & CART;
+}
+// no perforin in tumor cell
+
+
+
+//node CINHI {
+//  logic = dNFAT | BATF;  
+//}
+
+
+node Proliferation {
+  logic = AP1 & NFAT & MTORC1 & !PD1;  
+}

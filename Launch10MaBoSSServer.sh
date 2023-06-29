@@ -1,0 +1,10 @@
+screen -dmS server1 taskset --cpu-list 1 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20001 --host localhost --verbose
+screen -dmS server2 taskset --cpu-list 2 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20002 --host localhost --verbose
+screen -dmS server3 taskset --cpu-list 3 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20003 --host localhost --verbose
+screen -dmS server4 taskset --cpu-list 4 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20004 --host localhost --verbose
+screen -dmS server5 taskset --cpu-list 5 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20005 --host localhost --verbose
+screen -dmS server6 taskset --cpu-list 6 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20006 --host localhost --verbose
+screen -dmS server7 taskset --cpu-list 7 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20007 --host localhost --verbose
+screen -dmS server8 taskset --cpu-list 8 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20008 --host localhost --verbose
+screen -dmS server9 taskset --cpu-list 9 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20009 --host localhost --verbose
+screen -dmS server10 taskset --cpu-list 10 ~/MaBoSSGit/MaBoSS-env-2.0/engine/src/MaBoSS-server --port 20010 --host localhost --verbose
