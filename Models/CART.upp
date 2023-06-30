@@ -1,0 +1,14 @@
+death = Death;
+division = Division;
+
+$FASL_up u= p[(FASL) = 1];
+$Perforin_up u= p[(Perforin) = 1];
+
+$PDL1L2_tum_up u= p[(PDL1L2_tum) = 1];
+$CD8086_tum_up u= p[(CD8086_tum) = 1];
+$TA_tum_up u= p[(TA_tum) = 1];
+$IL2_up u= p[(IL2ge) = 1];
+$IS_tum_up u= p[(IS_tum) = 1];
+
+steps = 48;
+MaBoSS = MaBoSS;
