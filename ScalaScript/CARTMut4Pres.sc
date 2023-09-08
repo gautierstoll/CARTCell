@@ -70,35 +70,23 @@ val testList80 = testPar80.toList.map(x => x._1 + "\t" + x._2.toString).mkString
 val pw = new PrintWriter(new File("Mut80TumSize4Pres.csv"))
 pw.write(testList80)
 pw.close()
-// mutations 81 -> 100
-lazy val testPar100 = varMutPort.drop(80).take(20).par.map(varPort => {
+// mutations 81 -> 84
+lazy val testPar84 = varMutPort.drop(80).par.map(varPort => {
   print(varPort._1)
-  val upModel = new UPMaBoSS("Models/CART_gs.upp", mutCARTCfg.update(Map(varPort._1 -> "1", "thread_count" -> "1")),
+  val upModel = new UPMaBoSS("Models/CART.upp", mutCARTCfg.update(Map(varPort._1 -> "1", "thread_count" -> "1")),
     "localhost", varPort._2, hexUP = true, verbose = false)
   val upRes = upModel.runLight(10)
   (varPort._1, upRes.stateTrajectory(new NetState(Map("TUM" -> true)), normWithSize = true).last._2)
 })
-val testList100 = testPar100.toList.map(x => x._1 + "\t" + x._2.toString).mkString("\n")
-val pw = new PrintWriter(new File("Mut100TumSize4Pres.csv"))
-pw.write(testList100)
-pw.close()
-// mutations 101 -> ...
-lazy val testPar108 = varMutPort.drop(100).par.map(varPort => {
-  print(varPort._1)
-  val upModel = new UPMaBoSS("Models/CART_gs.upp", mutCARTCfg.update(Map(varPort._1 -> "1", "thread_count" -> "1")),
-    "localhost", varPort._2, hexUP = true, verbose = false)
-  val upRes = upModel.runLight(10)
-  (varPort._1, upRes.stateTrajectory(new NetState(Map("TUM" -> true)), normWithSize = true).last._2)
-})
-val testList108 = testPar108.toList.map(x => x._1 + "\t" + x._2.toString).mkString("\n")
+val testList84 = testPar84.toList.map(x => x._1 + "\t" + x._2.toString).mkString("\n")
 // add wild type
 val upModel = new UPMaBoSS("Models/CART.upp", mutCARTCfg.update(Map("thread_count" -> "1")),
   "localhost", listServerPorts.head, hexUP = true, verbose = false)
 val upRes = upModel.runLight(10)
 upRes.stateTrajectory(new NetState(Map("TUM" -> true)), normWithSize = true).last._2)
 
-val pw = new PrintWriter(new File("Mut108TumSize4Pres.csv"))
-pw.write(testList108+ "\n" + "wt" + "\t" +
+val pw = new PrintWriter(new File("Mut84TumSize4Pres.csv"))
+pw.write(testList84+ "\n" + "wt" + "\t" +
   upRes.stateTrajectory(new NetState(Map("TUM" -> true)), normWithSize = true).last._2.toString )
 pw.close()
 //
