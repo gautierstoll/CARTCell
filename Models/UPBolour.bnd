@@ -1,0 +1,364 @@
+Node Tum {//CellState
+     logic = (Tum);
+           rate_up = @logic ? $u_Tum : 0;
+           rate_down = @logic ? 0 : $d_Tum;
+         }
+Node TCell {//CellState
+     logic = (TCell);
+           rate_up = @logic ? $u_TCell : 0;
+           rate_down = @logic ? 0 : $d_TCell;
+         }
+Node CART { //CellState
+  logic = (CART);
+  rate_up = @logic ? $u_CART : 0;
+  rate_down = @logic ? 0 : $d_CART;
+}
+Node TA_tum { //TumorAntigen, CellState
+  logic = (TA_tum);
+  rate_up = @logic ? $u_TA_tum : 0;
+  rate_down = @logic ? 0 : $d_TA_tum;
+}
+// Cell states initial condition should be carefully set
+//
+Node CD137L { // ligand, TNFSF9, CHECK initial condition
+  logic = (CD137L);
+  rate_up = @logic ? $u_CD137L : 0;
+  rate_down = @logic ? 0 : $d_CD137L;
+}
+Node R_4_1BB { // receptor,  TNFRSF9
+  // logic = (CD137L & TCR);
+  logic = (TCR); //
+  rate_up = @logic ? $u_R_4_1BB : 0;
+  rate_down = @logic ? 0 : $d_R_4_1BB;
+}
+Node FASL {// ligand, CHECK effect on Tum, TCell?
+  // logic = (R_4_1BB & NR4A1 & IFNg & !ID3 & EGR2 & MYC & NFATC1); remove IFNg, replace by receptor
+  logic = (R_4_1BB & NR4A1 & !ID3 & EGR2 & MYC & NFATC1);
+  rate_up = @logic ? $u_FASL : 0;
+  rate_down = @logic ? 0 : $d_FASL;
+}
+Node TCF1 { // TF
+  logic = (!R_4_1BB & !FOXO1 & !BCL6 & !EZH2 & EGR2) | (!R_4_1BB & !FOXO1 & BCL6 & !EZH2) | (!R_4_1BB & FOXO1 & !EZH2) | (R_4_1BB & !EZH2);
+  rate_up = @logic ? $u_TCF1 : 0;
+  rate_down = @logic ? 0 : $d_TCF1;
+}
+Node AKT {
+  logic = (PI3K & !SHP2);
+  rate_up = @logic ? $u_AKT : 0;
+  rate_down = @logic ? 0 : $d_AKT;
+}
+Node BACH2 { // Transcriptional regulator
+  logic = (AKT & !EZH2);
+  rate_up = @logic ? $u_BACH2 : 0;
+  rate_down = @logic ? 0 : $d_BACH2;
+}
+Node NFATC2 {
+  logic = (!AKT & ZAP70) | (AKT);
+  rate_up = @logic ? $u_NFATC2 : 0;
+  rate_down = @logic ? 0 : $d_NFATC2;
+}
+Node MTOR {
+  logic = (AKT);
+  rate_up = @logic ? $u_MTOR : 0;
+  rate_down = @logic ? 0 : $d_MTOR;
+}
+Node NFkB { // TF
+  logic = (PKCtheta);
+  rate_up = @logic ? $u_NFkB : 0;
+  rate_down = @logic ? 0 : $d_NFkB;
+}
+Node FOXO1 { // TF
+  logic = (!AKT & !EZH2 & !IL2R & !IL12R);
+  rate_up = @logic ? $u_FOXO1 : 0;
+  rate_down = @logic ? 0 : $d_FOXO1;
+}
+Node AP1 { // TF
+  logic = (!AKT & !MAPK & PKCtheta) | (!AKT & MAPK) | (AKT);
+  rate_up = @logic ? $u_AP1 : 0;
+  rate_down = @logic ? 0 : $d_AP1;
+}
+Node NR4A1 { // nuclear receptor
+  logic = (AP1);
+  rate_up = @logic ? $u_NR4A1 : 0;
+  rate_down = @logic ? 0 : $d_NR4A1;
+}
+Node IFNg { // ligand
+  logic = (!BACH2 & !TBET_ZEB2 & EOMES) | (!BACH2 & TBET_ZEB2);
+  rate_up = @logic ? $u_IFNg : 0;
+  rate_down = @logic ? 0 : $d_IFNg;
+}
+Node IFNgR { // receptor
+  rate_up =  $u_IFNgR ;
+  rate_down = $d_IFNgR;
+}
+Node BLIMP1 { //TF
+  logic = (!BACH2 & !BCL6 & IL2R);
+  rate_up = @logic ? $u_BLIMP1 : 0;
+  rate_down = @logic ? 0 : $d_BLIMP1;
+}
+Node ID3 { // Transcriptional regulator
+  logic = (!BACH2 & !BLIMP1 & EGR2 & !TBET_ZEB2) | (BACH2 & !BLIMP1 & !TBET_ZEB2);
+  rate_up = @logic ? $u_ID3 : 0;
+  rate_down = @logic ? 0 : $d_ID3;
+}
+Node BCL6 { // Transcriptional regulator
+  logic = (!TCF1 & !NFATC2 & !NFkB & NFATC1 & !NIBcomp & !Epigenetic) | (!TCF1 & !NFATC2 & NFkB & !NIBcomp & !Epigenetic) | (!TCF1 & NFATC2 & !NIBcomp & !Epigenetic) | (TCF1 & !NIBcomp & !Epigenetic);
+  rate_up = @logic ? $u_BCL6 : 0;
+  rate_down = @logic ? 0 : $d_BCL6;
+}
+Node CD160 { //Receptor
+  logic = (BLIMP1);
+  rate_up = @logic ? $u_CD160 : 0;
+  rate_down = @logic ? 0 : $d_CD160;
+}
+Node TIGIT { //Receptor
+  logic = (!BLIMP1 & !IL2R & IL15R) | (!BLIMP1 & IL2R) | (BLIMP1);
+  rate_up = @logic ? $u_TIGIT : 0;
+  rate_down = @logic ? 0 : $d_TIGIT;
+}
+Node CD244 { //Receptor
+  logic = (BLIMP1);
+  rate_up = @logic ? $u_CD244 : 0;
+  rate_down = @logic ? 0 : $d_CD244;
+}
+Node TCR { //Receptor
+  // logic = (!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1);
+  logic = TCell & ((!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1));
+  rate_up = @logic ? $u_TCR : 0;
+  rate_down = @logic ? 0 : $d_TCR;
+}
+Node RAS {
+  logic = (!GRB2_SOS & PLCgamma) | (GRB2_SOS);
+  rate_up = @logic ? $u_RAS : 0;
+  rate_down = @logic ? 0 : $d_RAS;
+}
+Node BTLA { //Receptor
+  logic = (NFkB);
+  rate_up = @logic ? $u_BTLA : 0;
+  rate_down = @logic ? 0 : $d_BTLA;
+}
+Node EZH2 {
+  logic = (TCR);
+  rate_up = @logic ? $u_EZH2 : 0;
+  rate_down = @logic ? 0 : $d_EZH2;
+}
+Node PI3K {
+  logic = (TCR);
+  rate_up = @logic ? $u_PI3K : 0;
+  rate_down = @logic ? 0 : $d_PI3K;
+}
+Node CTLA4 { //Receptor
+  logic = (!NFATC2 & !NFATC1 & CART) | (!NFATC2 & NFATC1) | (NFATC2);
+  rate_up = @logic ? $u_CTLA4 : 0;
+  rate_down = @logic ? 0 : $d_CTLA4;
+}
+Node TExh { //Cell_State
+  logic = (!TIGIT & !CTLA4 & LAG3) | (!TIGIT & CTLA4) | (TIGIT);
+  rate_up = @logic ? $u_TExh : 0;
+  rate_down = @logic ? 0 : $d_TExh;
+}
+Node E2A { //TF
+  logic = (E2A);
+  rate_up = @logic ? $u_E2A : 0;
+  rate_down = @logic ? 0 : $d_E2A;
+}
+Node CXCR5 { //Receptor
+  logic = (!ID3 & E2A) | (ID3);
+  rate_up = @logic ? $u_CXCR5 : 0;
+  rate_down = @logic ? 0 : $d_CXCR5;
+}
+Node EGR2 { // TF
+  logic = (MAPK);
+  rate_up = @logic ? $u_EGR2 : 0;
+  rate_down = @logic ? 0 : $d_EGR2;
+}
+Node TBET_ZEB2 { //TF
+  logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
+  rate_up = @logic ? $u_TBET_ZEB2 : 0;
+  rate_down = @logic ? 0 : $d_TBET_ZEB2;
+}
+Node LAG3 { //Receptor
+  logic = (!EGR2 & NFATC1) | (EGR2);
+  rate_up = @logic ? $u_LAG3 : 0;
+  rate_down = @logic ? 0 : $d_LAG3;
+}
+Node EOMES { //TF
+  logic = (NFkB & !EZH2);
+  rate_up = @logic ? $u_EOMES : 0;
+  rate_down = @logic ? 0 : $d_EOMES;
+}
+Node GZMB { //Ligand
+  logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
+  rate_up = @logic ? $u_GZMB : 0;
+  rate_down = @logic ? 0 : $d_GZMB;
+}
+Node Perforin { // Ligand
+  logic = (!EOMES & Cytogran) | (EOMES);
+  rate_up = @logic ? $u_Perforin : 0;
+  rate_down = @logic ? 0 : $d_Perforin;
+}
+Node PGC1A { // //TF
+  logic = (FOXO1);
+  rate_up = @logic ? $u_PGC1A : 0;
+  rate_down = @logic ? 0 : $d_PGC1A;
+}
+Node HIF1A { //TF
+  logic = (MTOR);
+  rate_up = @logic ? $u_HIF1A : 0;
+  rate_down = @logic ? 0 : $d_HIF1A;
+}
+Node MYC { //TF
+  logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
+  rate_up = @logic ? $u_MYC : 0;
+  rate_down = @logic ? 0 : $d_MYC;
+}
+Node PPARa { //TF, nuclear receptor
+  logic = (!HIF1A);
+  rate_up = @logic ? $u_PPARa : 0;
+  rate_down = @logic ? 0 : $d_PPARa;
+}
+Node IL2R { //Receptor
+  logic = (!NFkB & AP1 & !ID3) | (NFkB & !ID3);
+  rate_up = @logic ? $u_IL2R : 0;
+  rate_down = @logic ? 0 : $d_IL2R;
+}
+Node IL12R { //Receptor
+  logic = (!NFATC2 & IL12R);
+  rate_up = @logic ? $u_IL12R : 0;
+  rate_down = @logic ? 0 : $d_IL12R;
+}
+Node IL21R { //Receptor
+  logic = (IL21R);
+  rate_up = @logic ? $u_IL21R : 0;
+  rate_down = @logic ? 0 : $d_IL21R;
+}
+Node ID2 { //TranscriptionalRegualator
+  logic = (!IL2R & !IL12R & IL21R) | (!IL2R & IL12R) | (IL2R);
+  rate_up = @logic ? $u_ID2 : 0;
+  rate_down = @logic ? 0 : $d_ID2;
+}
+Node BATF { //TF
+  logic = (!IL12R & IL21R) | (IL12R);
+  rate_up = @logic ? $u_BATF : 0;
+  rate_down = @logic ? 0 : $d_BATF;
+}
+Node IL15R {//Receptor
+  logic = (IL15R);
+  rate_up = @logic ? $u_IL15R : 0;
+  rate_down = @logic ? 0 : $d_IL15R;
+}
+Node IRF4 { //TF
+  logic = (!MTOR & !IL2R & !IL21R & NFATC1) | (!MTOR & !IL2R & IL21R) | (!MTOR & IL2R) | (MTOR);
+  rate_up = @logic ? $u_IRF4 : 0;
+  rate_down = @logic ? 0 : $d_IRF4;
+}
+Node MAPK {
+  logic = (RAS);
+  rate_up = @logic ? $u_MAPK : 0;
+  rate_down = @logic ? 0 : $d_MAPK;
+}
+Node NFATC1 { //TF?
+  logic = (!NFATC2 & !NFATC1 & !NIBcomp & ZAP70) | (!NFATC2 & !NFATC1 & NIBcomp) | (!NFATC2 & NFATC1) | (NFATC2);
+  rate_up = @logic ? $u_NFATC1 : 0;
+  rate_down = @logic ? 0 : $d_NFATC1;
+}
+Node TIM3 { //Receptor
+  logic = (NFATC1);
+  rate_up = @logic ? $u_TIM3 : 0;
+  rate_down = @logic ? 0 : $d_TIM3;
+}
+Node PD1 { //Receptor
+//  logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & PD1_tum & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
+  logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
+  rate_up = @logic ? $u_PD1 : 0;
+  rate_down = @logic ? 0 : $d_PD1;
+}
+Node KLRG1 { //Receptor
+  logic = (!TCF1);
+  rate_up = @logic ? $u_KLRG1 : 0;
+  rate_down = @logic ? 0 : $d_KLRG1;
+}
+Node NIBcomp { //?
+  logic = (!AP1 & BATF & IRF4 & NFATC1);
+  rate_up = @logic ? $u_NIBcomp : 0;
+  rate_down = @logic ? 0 : $d_NIBcomp;
+}
+Node Epigenetic {
+  logic = (BLIMP1);
+  rate_up = @logic ? $u_Epigenetic : 0;
+  rate_down = @logic ? 0 : $d_Epigenetic;
+}
+// Remove ?
+// Node PD1_tum { //Receptor, need to be fused
+//  logic = (PD1_tum);
+//  rate_up = @logic ? $u_PD1_tum : 0;
+//  rate_down = @logic ? 0 : $d_PD1_tum;
+//}
+Node FAS { //Receptor
+  // logic = Tum | (TCell & IFNgR) ; //seems that IFNg on FAS act only in TCell
+  logic = (TCell & IFNgR) ;
+  rate_up = @logic ? $u_FAS : 0;
+  rate_down = @logic ? 0 : $d_FAS;
+}
+Node scFv { //Related to TCR activation
+  // logic = (CART & TA_tum);
+  logic = (CART) ;
+  rate_up = @logic ? $u_scFv : 0;
+  rate_down = @logic ? 0 : $d_scFv;
+}
+Node SHP2 {
+  logic = (!CTLA4 & PD1) | (CTLA4);
+  rate_up = @logic ? $u_SHP2 : 0;
+  rate_down = @logic ? 0 : $d_SHP2;
+}
+Node GRB2_SOS { //
+  logic = (TCR);
+  rate_up = @logic ? $u_GRB2_SOS : 0;
+  rate_down = @logic ? 0 : $d_GRB2_SOS;
+}
+Node PKCtheta { //
+  logic = (!AKT & !EGR2 & PLCgamma) | (!AKT & EGR2) | (AKT);
+  rate_up = @logic ? $u_PKCtheta : 0;
+  rate_down = @logic ? 0 : $d_PKCtheta;
+}
+Node SHP1 {
+  logic = (PD1);
+  rate_up = @logic ? $u_SHP1 : 0;
+  rate_down = @logic ? 0 : $d_SHP1;
+}
+Node ZAP70 {
+  logic = (RAS & !SHP2 & !SHP1);
+  rate_up = @logic ? $u_ZAP70 : 0;
+  rate_down = @logic ? 0 : $d_ZAP70;
+}
+Node LAT {
+  logic = (!PD1 & ZAP70) | (PD1);
+  rate_up = @logic ? $u_LAT : 0;
+  rate_down = @logic ? 0 : $d_LAT;
+}
+Node PLCgamma {
+  logic = (LAT);
+  rate_up = @logic ? $u_PLCgamma : 0;
+  rate_down = @logic ? 0 : $d_PLCgamma;
+}
+Node CASP { //simplified apoptosis pathway, CHECK cell type
+    logic = FAS & Tum; // CHECK Fas Fasl on tum
+    rate_up = (@logic ? $u_CASP : 0.0) +  (Tum ? $killByTCell : 0.0) ;
+    rate_down = @logic ? 0 : $d_CASP; //$d_CASP should be tuned carefully
+}
+Node Cytogran { //CytotoxicGranul
+  logic = (PKCtheta);
+  rate_up = @logic ? $u_Cytogran : 0;
+  rate_down = @logic ? 0 : $d_Cytogran;
+}
+Node Death {
+  // logic = (!FAS_FASL & !GZMB & Perforin) | (!FAS_FASL & GZMB) | (FAS_FASL);
+  logic = CASP | TExh ;
+  rate_up = @logic ? $u_Death : 0;
+  rate_down = @logic ? 0 : $d_Death;
+}
+Node Prolif { //CellState
+  logic = (MYC);
+  rate_up = @logic ? $u_Prolif : 0;
+  rate_down = 0;
+}

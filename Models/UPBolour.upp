@@ -1,0 +1,8 @@
+death = Death;
+division = Prolif;
+
+$u_R_4_1BB u= p[(CD137L) = 1];
+$u_IFNgR u= p[(IFNg) = 1];
+$u_FAS u= p[(FASL) = 1];
+$u_scFv u= p[(TA_tum) = 1];
+$killByTCell u= p[(GZMB,Perforin) = 1];

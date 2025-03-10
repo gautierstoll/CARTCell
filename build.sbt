@@ -1,11 +1,10 @@
 
-import sun.security.tools.PathList
 import sun.security.tools.PathList._
 
 name := "CARTCell"
 
 version := "0.0.1"
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.19"
 crossScalaVersions := Seq("2.12.1", "2.13.0")
 
 libraryDependencies += "io.github.pityka" %% "nspl-awt" % "0.0.21" % "provided"
