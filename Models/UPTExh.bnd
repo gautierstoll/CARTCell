@@ -39,6 +39,8 @@ Node FASL {// ligand, CHECK effect on Tum, TCell?
 }
 Node TCF1 { // TF
   logic = (!R_4_1BB & !FOXO1 & !BCL6 & !EZH2 & EGR2) | (!R_4_1BB & !FOXO1 & BCL6 & !EZH2) | (!R_4_1BB & FOXO1 & !EZH2) | (R_4_1BB & !EZH2);
+//  logic = (!R_4_1BB & !FOXO1 & !BCL6 & !EZH2 & EGR2) | (!R_4_1BB & !FOXO1 & BCL6 & !EZH2) | (!R_4_1BB & FOXO1 & !EZH2) | (R_4_1BB & !EZH2);
+
   rate_up = @logic ? $u_TCF1 : 0;
   rate_down = @logic ? 0 : $d_TCF1;
 }
@@ -73,7 +75,8 @@ Node FOXO1 { // TF
   rate_down = @logic ? 0 : $d_FOXO1;
 }
 Node AP1 { // TF
-  logic = (!AKT & !MAPK & PKCtheta) | (!AKT & MAPK) | (AKT);
+  //logic = (!AKT & !MAPK & PKCtheta) | (!AKT & MAPK) | (AKT);
+  logic = PKCtheta | MAPK | AKT;   // same logic
   rate_up = @logic ? $u_AP1 : 0;
   rate_down = @logic ? 0 : $d_AP1;
 }
@@ -83,7 +86,8 @@ Node NR4A1 { // nuclear receptor
   rate_down = @logic ? 0 : $d_NR4A1;
 }
 Node IFNg { // ligand
-  logic = (!BACH2 & !TBET_ZEB2 & EOMES) | (!BACH2 & TBET_ZEB2);
+  // logic = (!BACH2 & !TBET_ZEB2 & EOMES) | (!BACH2 & TBET_ZEB2);
+  logic = !BACH2 & (EOMES | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_IFNg : 0;
   rate_down = @logic ? 0 : $d_IFNg;
 }
@@ -97,7 +101,8 @@ Node BLIMP1 { //TF
   rate_down = @logic ? 0 : $d_BLIMP1;
 }
 Node ID3 { // Transcriptional regulator
-  logic = (!BACH2 & !BLIMP1 & EGR2 & !TBET_ZEB2) | (BACH2 & !BLIMP1 & !TBET_ZEB2);
+  // logic = (!BACH2 & !BLIMP1 & EGR2 & !TBET_ZEB2) | (BACH2 & !BLIMP1 & !TBET_ZEB2);
+  logic = (EGR2 | BACH2 ) & !BLIMP1 & !TBET_ZEB2; // same logic
   rate_up = @logic ? $u_ID3 : 0;
   rate_down = @logic ? 0 : $d_ID3;
 }
@@ -112,7 +117,8 @@ Node CD160 { //Receptor
   rate_down = @logic ? 0 : $d_CD160;
 }
 Node TIGIT { //Receptor
-  logic = (!BLIMP1 & !IL2R & IL15R) | (!BLIMP1 & IL2R) | (BLIMP1);
+  // logic = (!BLIMP1 & !IL2R & IL15R) | (!BLIMP1 & IL2R) | (BLIMP1);
+  logic = (IL15R | IL2R | BLIMP1);  // same logic
   rate_up = @logic ? $u_TIGIT : 0;
   rate_down = @logic ? 0 : $d_TIGIT;
 }
@@ -123,12 +129,14 @@ Node CD244 { //Receptor
 }
 Node TCR { //Receptor
   // logic = (!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1);
-  logic = TCell & ((!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1));
+  // logic = TCell & ((!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1));
+  logic = TCell & !BTLA & !CTLA4 & !TIM3 & !PD1 & (scFv | TCR ); // same logic
   rate_up = @logic ? $u_TCR : 0;
   rate_down = @logic ? 0 : $d_TCR;
 }
 Node RAS {
-  logic = (!GRB2_SOS & PLCgamma) | (GRB2_SOS);
+  // logic = (!GRB2_SOS & PLCgamma) | (GRB2_SOS);
+  logic = (PLCgamma | GRB2_SOS); // same logic
   rate_up = @logic ? $u_RAS : 0;
   rate_down = @logic ? 0 : $d_RAS;
 }
@@ -148,12 +156,14 @@ Node PI3K {
   rate_down = @logic ? 0 : $d_PI3K;
 }
 Node CTLA4 { //Receptor
-  logic = (!NFATC2 & !NFATC1 & CART) | (!NFATC2 & NFATC1) | (NFATC2);
+  // logic = (!NFATC2 & !NFATC1 & CART) | (!NFATC2 & NFATC1) | (NFATC2);
+  logic = (CART | NFATC1 | NFATC2); // same logic
   rate_up = @logic ? $u_CTLA4 : 0;
   rate_down = @logic ? 0 : $d_CTLA4;
 }
 Node TExh { //Cell_State
-  logic = (!TIGIT & !CTLA4 & LAG3) | (!TIGIT & CTLA4) | (TIGIT);
+  //logic = (!TIGIT & !CTLA4 & LAG3) | (!TIGIT & CTLA4) | (TIGIT);
+  logic = LAG3 | (CTLA4 | TIGIT); // same logic
   rate_up = @logic ? $u_TExh : 0;
   rate_down = @logic ? 0 : $d_TExh;
 }
@@ -163,7 +173,8 @@ Node E2A { //TF
   rate_down = @logic ? 0 : $d_E2A;
 }
 Node CXCR5 { //Receptor
-  logic = (!ID3 & E2A) | (ID3);
+  //logic = (!ID3 & E2A) | (ID3);
+  logic = (E2A | ID3); // same logic
   rate_up = @logic ? $u_CXCR5 : 0;
   rate_down = @logic ? 0 : $d_CXCR5;
 }
@@ -173,12 +184,14 @@ Node EGR2 { // TF
   rate_down = @logic ? 0 : $d_EGR2;
 }
 Node TBET_ZEB2 { //TF
-  logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
+  //logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
+  logic = !EGR2 & (IL21R | IL12R | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_TBET_ZEB2 : 0;
   rate_down = @logic ? 0 : $d_TBET_ZEB2;
 }
 Node LAG3 { //Receptor
-  logic = (!EGR2 & NFATC1) | (EGR2);
+  //logic = (!EGR2 & NFATC1) | (EGR2);
+  logic = (NFATC1 | EGR2); //same logic
   rate_up = @logic ? $u_LAG3 : 0;
   rate_down = @logic ? 0 : $d_LAG3;
 }
@@ -188,12 +201,14 @@ Node EOMES { //TF
   rate_down = @logic ? 0 : $d_EOMES;
 }
 Node GZMB { //Ligand
-  logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
+  // logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
+  logic = (EOMES | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_GZMB : 0;
   rate_down = @logic ? 0 : $d_GZMB;
 }
 Node Perforin { // Ligand
-  logic = (!EOMES & Cytogran) | (EOMES);
+  //logic = (!EOMES & Cytogran) | (EOMES);
+  logic = Cytogran | (EOMES); // same logic
   rate_up = @logic ? $u_Perforin : 0;
   rate_down = @logic ? 0 : $d_Perforin;
 }
@@ -208,6 +223,7 @@ Node HIF1A { //TF
   rate_down = @logic ? 0 : $d_HIF1A;
 }
 Node MYC { //TF
+  //logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
   logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
   rate_up = @logic ? $u_MYC : 0;
   rate_down = @logic ? 0 : $d_MYC;
