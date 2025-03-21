@@ -1,0 +1,43 @@
+division = profileration;
+
+death  = Apoptosis;
+steps = 48;
+
+$u_IL4R u= p[(IL4) = (1)];
+$d_IL4R u= p[(IL4) = (0)];
+
+$u_IFNGR u= p[(IFNg) = (1)];
+$d_IFNGR u= p[(IFNg) = (0)];
+
+$u_TGFBR u= p[(TGFB_L) = (1)];
+$d_TGFBR u= p[(TGFB_L) = (0)];
+
+$u_FAS u= p[(FAS_L) = (1)];
+$d_FAS u= p[(FAS_L) = (0)];
+
+$u_s41BB u= p[(L41BB) = (1)];
+$d_s41BB u= p[(L41BB) = (0)];
+
+$u_CAR u= p[(BCMA) = (1)];
+$d_CAR u= p[(BCMA) = (0)];
+
+$u_abTCR u= p[(pMHCII) = (1)];
+$d_abTCR u= p[(pMHCII) = (0)];
+
+$u_gdTCR u= p[(surfAnt) = (1)];
+$d_gdTCR u= p[(surfAnt) = (0)];
+
+$u_CD28 u= p[(CD80_86) = (1)];
+$d_CD28 u= p[(CD80_86) = (0)];
+
+$u_IL7R u= p[(IL7_L) = (1)];
+$d_IL7R u= p[(IL7_L) = (0)];
+
+$u_IL2R u= p[(IL2_L) = (1)];
+$d_IL2R u= p[(IL2_L) = (0)];
+
+$u_IL12R u= p[(IL12_L) = (1)];
+$d_IL12R u= p[(IL12_L) = (0)];
+
+$u_IL27R u= p[(IL27_L) = (1)];
+$d_IL27R u= p[(IL27_L) = (0)];
