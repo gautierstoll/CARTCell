@@ -425,6 +425,7 @@ Node Cytogran {
   rate_down = @logic ? 0 : $d_Cytogran;
 }
 Node Death {
+//Type: State
 //Deprecated: logic = (!FAS_FASL & !GZMB & Perforin) | (!FAS_FASL & GZMB) | (FAS_FASL);
   logic = CASP | TExh ;
   rate_up = @logic ? $u_Death : 0;

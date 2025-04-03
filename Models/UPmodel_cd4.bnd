@@ -1,46 +1,34 @@
 Node BCMA {
-
 	logic = BCMA;
 	rate_up = @logic ? $u_BCMA : 0;
 	rate_down = @logic ? 0 : $d_BCMA;
 }
 Node pMHCII {
-
 	logic = pMHCII;
 	rate_up = @logic ? $u_pMHCII : 0;
 	rate_down = @logic ? 0 : $d_pMHCII;
 }
-
 Node surfAnt {
-
 	logic = surfAnt;
 	rate_up = @logic ? $u_surfAnt : 0;
 	rate_down = @logic ? 0 : $d_surfAnt;
 }
-
 Node LCK {
-
 	logic = LCK;
 	rate_up = @logic ? $u_LCK : 0;
 	rate_down = @logic ? 0 : $d_LCK;
 }
-
 Node SHP1 {
-
 	logic = (GRB2 AND LAT);
 	rate_up = @logic ? $u_SHP1 : 0;
 	rate_down = @logic ? 0 : $d_SHP1;
 }
-
 Node THEMIS {
-
 	logic = (LAT AND GRB2);
 	rate_up = @logic ? $u_THEMIS : 0;
 	rate_down = @logic ? 0 : $d_THEMIS;
 }
-
 Node CAR {
-
 	//logic = ((BCMA AND LCK) AND NOT ((SHP1 AND THEMIS)));
 	logic = (LCK AND NOT ((SHP1 AND THEMIS)));
 	rate_up = @logic ? $u_CAR : 0;
@@ -48,30 +36,23 @@ Node CAR {
 }
 
 Node abTCR {
-
 	//logic = ((pMHCII AND LCK) AND NOT ((SHP1 AND THEMIS)));
 	logic = (LCK AND NOT ((SHP1 AND THEMIS)));
 	rate_up = @logic ? $u_abTCR : 0;
 	rate_down = @logic ? 0 : $d_abTCR;
 }
-
 Node gdTCR {
-
 	//logic = (surfAnt AND LCK);
 	logic = (LCK);
 	rate_up = @logic ? $u_gdTCR : 0;
 	rate_down = @logic ? 0 : $d_gdTCR;
 }
-
 Node ZAP70 {
-
 	logic = ((((gdTCR OR abTCR) OR CAR)) AND NOT SHP1);
 	rate_up = @logic ? $u_ZAP70 : 0;
 	rate_down = @logic ? 0 : $d_ZAP70;
 }
-
 Node LAT {
-
 	logic = ZAP70;
 	rate_up = @logic ? $u_LAT : 0;
 	rate_down = @logic ? 0 : $d_LAT;
