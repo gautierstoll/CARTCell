@@ -1,0 +1,104 @@
+//Write next line to {
+//Type: Can have several, (State, TrReg (transcriptional regulator, include transcription factor), Ligand, Receptor, Complex, Family)
+//Name: (alternative name)
+//Deprecated: (equations that have been modified)
+// Cell states initial condition should be carefully set
+//
+//States in CD8_Tum model
+//
+Node Tum {
+//Type: State
+     logic = (Tum);
+           rate_up = @logic ? $u_Tum : 0;
+           rate_down = @logic ? 0 : $d_Tum;
+         }
+Node TCell {
+//Type: State
+     logic = (TCell);
+           rate_up = @logic ? $u_TCell : 0;
+           rate_down = @logic ? 0 : $d_TCell;
+         }
+Node CART {
+//Type: State
+  logic = (CART);
+  rate_up = @logic ? $u_CART : 0;
+  rate_down = @logic ? 0 : $d_CART;
+}
+Node TA_tum {
+//Type: State
+//Name: TumorAntigen
+//Tumor that has an antigene that can activate CATT cells
+  logic = (TA_tum);
+  rate_up = @logic ? $u_TA_tum : 0;
+  rate_down = @logic ? 0 : $d_TA_tum;
+}
+Node TExh {
+//Type: State
+//Deprecated: logic = (!TIGIT & !CTLA4 & LAG3) | (!TIGIT & CTLA4) | (TIGIT);
+  logic = LAG3 | (CTLA4 | TIGIT); // same logic
+  rate_up = @logic ? $u_TExh : 0;
+  rate_down = @logic ? 0 : $d_TExh;
+}
+Node Death {
+//Type: State
+//Deprecated: logic = (!FAS_FASL & !GZMB & Perforin) | (!FAS_FASL & GZMB) | (FAS_FASL);
+  logic = CASP | TExh ;
+  rate_up = @logic ? $u_Death : 0;
+  rate_down = @logic ? 0 : $d_Death;
+}
+Node Prolif {
+//Type: State
+// --> to be fused below
+  logic = (MYC);
+  rate_up = @logic ? $u_Prolif : 0;
+  rate_down = 0;
+}
+// States in CD4
+Node CAR {
+//Tyoe: ?
+//Deprecated: logic = ((BCMA AND LCK) AND NOT ((SHP1 AND THEMIS)));
+	logic = (LCK AND NOT ((SHP1 AND THEMIS)));
+	rate_up = @logic ? $u_CAR : 0;
+	rate_down = @logic ? 0 : $d_CAR;
+}
+Node Treg {
+//Type: State
+	logic = FOXP3;
+	rate_up = @logic ? $u_Treg : 0;
+	rate_down = @logic ? 0 : $d_Treg;
+}
+Node Th1 {
+//Type: State
+	logic = (TBET AND IFNg);
+	rate_up = @logic ? $u_Th1 : 0;
+	rate_down = @logic ? 0 : $d_Th1;
+}
+Node Th2 {
+//Type: State
+	logic = (GATA3 AND IL4);
+	rate_up = @logic ? $u_Th2 : 0;
+	rate_down = @logic ? 0 : $d_Th2;
+}
+Node profileration {
+//Type: State
+// --> to be fused above
+	logic = E2F;
+	rate_up = @logic ? $u_profileration : 0;
+	rate_down = @logic ? 0 : $d_profileration;
+}
+
+//
+// Common nodes in CD8_Tum model
+//
+
+//
+// Common nodes in CD4 model
+//
+
+//
+// Extra nodes in CD8_Tum model
+//
+
+//
+// Extra nodes in CD4 model
+//
