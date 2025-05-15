@@ -1,27 +1,31 @@
-//Write next line to {
-//Type: Can have several, (State, TrReg (transcriptional regulator, include transcription factor), Ligand, Receptor, Complex, Family)
+//Write next line to "Node {"
+//Function: Can have several, (State, TrReg (transcriptional regulator, include transcription factor), Ligand, Receptor, Complex, Family)
 //Name: (alternative name)
+//Type: Family (eg: (Type1,Type2), Protein, Transcpript, Gene (only coding DNA), Complex, Cascade (eg: (Type1, Type2))
 //Deprecated: (equations that have been modified)
+//Source: Name, Reference (possible several lines), Comment
+//Interpretation: Sentence describing interpretation in term of MaBoSS grammar
+
 Node Tum {
-//Type: State
+//Function: State
      logic = (Tum);
            rate_up = @logic ? $u_Tum : 0;
            rate_down = @logic ? 0 : $d_Tum;
          }
 Node TCell {
-//Type: State
+//Function: State
      logic = (TCell);
            rate_up = @logic ? $u_TCell : 0;
            rate_down = @logic ? 0 : $d_TCell;
          }
 Node CART {
-//Type: State
+//Function: State
   logic = (CART);
   rate_up = @logic ? $u_CART : 0;
   rate_down = @logic ? 0 : $d_CART;
 }
 Node TA_tum {
-//Type: State
+//Function: State
 //Name: TumorAntigen
   logic = (TA_tum);
   rate_up = @logic ? $u_TA_tum : 0;
@@ -30,14 +34,14 @@ Node TA_tum {
 // Cell states initial condition should be carefully set
 //
 Node CD137L {//CHECK initial condition
-//Type: Ligand
+//Function: Ligand
 //Name: TNFSF9
   logic = (CD137L);
   rate_up = @logic ? $u_CD137L : 0;
   rate_down = @logic ? 0 : $d_CD137L;
 }
 Node R_4_1BB {
-//Type: Receptor
+//Function: Receptor
 //Name: TNFRSF9
 //Deprecated: logic = (CD137L & TCR);
   logic = (TCR); //
@@ -45,14 +49,14 @@ Node R_4_1BB {
   rate_down = @logic ? 0 : $d_R_4_1BB;
 }
 Node FASL {//CHECK effect on Tum, TCell?
-//Type: Ligand
+//Function: Ligand
 //Deprecated: logic = (R_4_1BB & NR4A1 & IFNg & !ID3 & EGR2 & MYC & NFATC1); remove IFNg, replace by receptor
   logic = (R_4_1BB & NR4A1 & !ID3 & EGR2 & MYC & NFATC1);
   rate_up = @logic ? $u_FASL : 0;
   rate_down = @logic ? 0 : $d_FASL;
 }
 Node TCF1 {
-//Type: TrReg
+//Function: TrReg
 //Deprecated: logic = (!R_4_1BB & !FOXO1 & !BCL6 & !EZH2 & EGR2) | (!R_4_1BB & !FOXO1 & BCL6 & !EZH2) | (!R_4_1BB & FOXO1 & !EZH2) | (R_4_1BB & !EZH2);
   logic = (!R_4_1BB & !FOXO1 & !BCL6 & !EZH2 & EGR2) | (!R_4_1BB & !FOXO1 & BCL6 & !EZH2) | (!R_4_1BB & FOXO1 & !EZH2) | (R_4_1BB & !EZH2);
   rate_up = @logic ? $u_TCF1 : 0;
@@ -64,13 +68,13 @@ Node AKT {
   rate_down = @logic ? 0 : $d_AKT;
 }
 Node BACH2 {
-//Type: TrReg
+//Function: TrReg
   logic = (AKT & !EZH2);
   rate_up = @logic ? $u_BACH2 : 0;
   rate_down = @logic ? 0 : $d_BACH2;
 }
 Node NFATC2 {
-//Type: TrReg
+//Function: TrReg
   logic = (!AKT & ZAP70) | (AKT);
   rate_up = @logic ? $u_NFATC2 : 0;
   rate_down = @logic ? 0 : $d_NFATC2;
@@ -81,20 +85,20 @@ Node MTOR {
   rate_down = @logic ? 0 : $d_MTOR;
 }
 Node NFkB {
-//Type: TrReg
+//Function: TrReg
 //Type: Complex
   logic = (PKCtheta);
   rate_up = @logic ? $u_NFkB : 0;
   rate_down = @logic ? 0 : $d_NFkB;
 }
 Node FOXO1 {
-//Tyhpe: TrReg
+//Function: TrReg
   logic = (!AKT & !EZH2 & !IL2R & !IL12R);
   rate_up = @logic ? $u_FOXO1 : 0;
   rate_down = @logic ? 0 : $d_FOXO1;
 }
 Node AP1 {
-//thype: TrReg
+//Function: TrReg
 //Deprecated: logic = (!AKT & !MAPK & PKCtheta) | (!AKT & MAPK) | (AKT);
   logic = PKCtheta | MAPK | AKT;   // same logic
   rate_up = @logic ? $u_AP1 : 0;
@@ -106,57 +110,57 @@ Node NR4A1 { // nuclear receptor
   rate_down = @logic ? 0 : $d_NR4A1;
 }
 Node IFNg {
-//Type: Ligand
+//Function: Ligand
 //Deprecated: logic = (!BACH2 & !TBET_ZEB2 & EOMES) | (!BACH2 & TBET_ZEB2);
   logic = !BACH2 & (EOMES | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_IFNg : 0;
   rate_down = @logic ? 0 : $d_IFNg;
 }
 Node IFNgR {
-//Type: Receptor
+//Function: Receptor
   rate_up =  $u_IFNgR ;
   rate_down = $d_IFNgR;
 }
 Node BLIMP1 {
-//Type: TrReg
+//Function: TrReg
   logic = (!BACH2 & !BCL6 & IL2R);
   rate_up = @logic ? $u_BLIMP1 : 0;
   rate_down = @logic ? 0 : $d_BLIMP1;
 }
 Node ID3 {
-//Type: TrReg
+//Function: TrReg
 //Deprecated: logic = (!BACH2 & !BLIMP1 & EGR2 & !TBET_ZEB2) | (BACH2 & !BLIMP1 & !TBET_ZEB2);
   logic = (EGR2 | BACH2 ) & !BLIMP1 & !TBET_ZEB2; // same logic
   rate_up = @logic ? $u_ID3 : 0;
   rate_down = @logic ? 0 : $d_ID3;
 }
 Node BCL6 {
-//Type: TrReg
+//Function: TrReg
   logic = (!TCF1 & !NFATC2 & !NFkB & NFATC1 & !NIBcomp & !Epigenetic) | (!TCF1 & !NFATC2 & NFkB & !NIBcomp & !Epigenetic) | (!TCF1 & NFATC2 & !NIBcomp & !Epigenetic) | (TCF1 & !NIBcomp & !Epigenetic);
   rate_up = @logic ? $u_BCL6 : 0;
   rate_down = @logic ? 0 : $d_BCL6;
 }
 Node CD160 {
-//type: Receptor
+//Function: Receptor
   logic = (BLIMP1);
   rate_up = @logic ? $u_CD160 : 0;
   rate_down = @logic ? 0 : $d_CD160;
 }
 Node TIGIT {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!BLIMP1 & !IL2R & IL15R) | (!BLIMP1 & IL2R) | (BLIMP1);
   logic = (IL15R | IL2R | BLIMP1);  // same logic
   rate_up = @logic ? $u_TIGIT : 0;
   rate_down = @logic ? 0 : $d_TIGIT;
 }
 Node CD244 {
-//Type: Receptor
+//Function: Receptor
   logic = (BLIMP1);
   rate_up = @logic ? $u_CD244 : 0;
   rate_down = @logic ? 0 : $d_CD244;
 }
 Node TCR {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1);
 //Deprecated: logic = TCell & ((!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1));
   logic = TCell & !BTLA & !CTLA4 & !TIM3 & !PD1 & (scFv | TCR ); // same logic
@@ -170,7 +174,7 @@ Node RAS {
   rate_down = @logic ? 0 : $d_RAS;
 }
 Node BTLA {
-//Type: Receptor
+//Function: Receptor
   logic = (NFkB);
   rate_up = @logic ? $u_BTLA : 0;
   rate_down = @logic ? 0 : $d_BTLA;
@@ -186,105 +190,105 @@ Node PI3K {
   rate_down = @logic ? 0 : $d_PI3K;
 }
 Node CTLA4 {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!NFATC2 & !NFATC1 & CART) | (!NFATC2 & NFATC1) | (NFATC2);
   logic = (CART | NFATC1 | NFATC2); // same logic
   rate_up = @logic ? $u_CTLA4 : 0;
   rate_down = @logic ? 0 : $d_CTLA4;
 }
 Node TExh {
-//Type: State
+//Function: State
 //Deprecated: logic = (!TIGIT & !CTLA4 & LAG3) | (!TIGIT & CTLA4) | (TIGIT);
   logic = LAG3 | (CTLA4 | TIGIT); // same logic
   rate_up = @logic ? $u_TExh : 0;
   rate_down = @logic ? 0 : $d_TExh;
 }
 Node E2A {
-//Type: TrReg
+//Function: TrReg
   logic = (E2A);
   rate_up = @logic ? $u_E2A : 0;
   rate_down = @logic ? 0 : $d_E2A;
 }
 Node CXCR5 {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!ID3 & E2A) | (ID3);
   logic = (E2A | ID3); // same logic
   rate_up = @logic ? $u_CXCR5 : 0;
   rate_down = @logic ? 0 : $d_CXCR5;
 }
 Node EGR2 {
-//Type: TrReg TF
+//Function: TrReg TF
   logic = (MAPK);
   rate_up = @logic ? $u_EGR2 : 0;
   rate_down = @logic ? 0 : $d_EGR2;
 }
 Node TBET_ZEB2 {
-//Type: TrReg
+//Function: TrReg
 //Deprecated: logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
   logic = !EGR2 & (IL21R | IL12R | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_TBET_ZEB2 : 0;
   rate_down = @logic ? 0 : $d_TBET_ZEB2;
 }
 Node LAG3 {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!EGR2 & NFATC1) | (EGR2);
   logic = (NFATC1 | EGR2); //same logic
   rate_up = @logic ? $u_LAG3 : 0;
   rate_down = @logic ? 0 : $d_LAG3;
 }
 Node EOMES {
-//Type: TrReg
+//Function: TrReg
   logic = (NFkB & !EZH2);
   rate_up = @logic ? $u_EOMES : 0;
   rate_down = @logic ? 0 : $d_EOMES;
 }
 Node GZMB {
-//Type: Ligand
+//Function: Ligand
 //Deprecated: logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
   logic = (EOMES | TBET_ZEB2); // same logic
   rate_up = @logic ? $u_GZMB : 0;
   rate_down = @logic ? 0 : $d_GZMB;
 }
 Node Perforin {
-//Type: Ligand
+//Function: Ligand
 //Deprecated: logic = (!EOMES & Cytogran) | (EOMES);
   logic = Cytogran | (EOMES); // same logic
   rate_up = @logic ? $u_Perforin : 0;
   rate_down = @logic ? 0 : $d_Perforin;
 }
 Node PGC1A {
-//Type: TrReg
+//Function: TrReg
   logic = (FOXO1);
   rate_up = @logic ? $u_PGC1A : 0;
   rate_down = @logic ? 0 : $d_PGC1A;
 }
 Node HIF1A {
-//Type: TrReg
+//Function: TrReg
   logic = (MTOR);
   rate_up = @logic ? $u_HIF1A : 0;
   rate_down = @logic ? 0 : $d_HIF1A;
 }
 Node MYC {
-//Type: TrReg
+//Function: TrReg
 //Deprecated: logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
   logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
   rate_up = @logic ? $u_MYC : 0;
   rate_down = @logic ? 0 : $d_MYC;
 }
 Node PPARa { //nuclear receptor
-//Type: TrReg
+//Function: TrReg
   logic = (!HIF1A);
   rate_up = @logic ? $u_PPARa : 0;
   rate_down = @logic ? 0 : $d_PPARa;
 }
 Node IL2R {
-//Type: Receptor
+//Function: Receptor
   logic = (!NFkB & AP1 & !ID3) | (NFkB & !ID3);
   rate_up = @logic ? $u_IL2R : 0;
   rate_down = @logic ? 0 : $d_IL2R;
 }
 Node IL12R {
-//Type: Receptor
+//Function: Receptor
   logic = (!NFATC2 & IL12R);
   rate_up = @logic ? $u_IL12R : 0;
   rate_down = @logic ? 0 : $d_IL12R;
@@ -295,26 +299,26 @@ Node IL21R { //Receptor
   rate_down = @logic ? 0 : $d_IL21R;
 }
 Node ID2 {
-//Type: TrReg
+//Function: TrReg
 //Deprecated: logic = (!IL2R & !IL12R & IL21R) | (!IL2R & IL12R) | (IL2R);
   logic = (IL21R) | (IL12R) | (IL2R); // same logic
   rate_up = @logic ? $u_ID2 : 0;
   rate_down = @logic ? 0 : $d_ID2;
 }
 Node BATF {
-//Type: TrReg
+//Function: TrReg
   logic = (!IL12R & IL21R) | (IL12R);
   rate_up = @logic ? $u_BATF : 0;
   rate_down = @logic ? 0 : $d_BATF;
 }
 Node IL15R {
-//Type: Receptor
+//Function: Receptor
   logic = (IL15R);
   rate_up = @logic ? $u_IL15R : 0;
   rate_down = @logic ? 0 : $d_IL15R;
 }
 Node IRF4 {
-//Type: TrReg
+//Function: TrReg
   logic = (!MTOR & !IL2R & !IL21R & NFATC1) | (!MTOR & !IL2R & IL21R) | (!MTOR & IL2R) | (MTOR);
   rate_up = @logic ? $u_IRF4 : 0;
   rate_down = @logic ? 0 : $d_IRF4;
@@ -325,26 +329,26 @@ Node MAPK {
   rate_down = @logic ? 0 : $d_MAPK;
 }
 Node NFATC1 {// type unsure
-//Type: TrReg
+//Function: TrReg
   logic = (!NFATC2 & !NFATC1 & !NIBcomp & ZAP70) | (!NFATC2 & !NFATC1 & NIBcomp) | (!NFATC2 & NFATC1) | (NFATC2);
   rate_up = @logic ? $u_NFATC1 : 0; // PostTrans regulation, NFATC2 seems only competing
   rate_down = @logic ? 0 : $d_NFATC1; // PostTrans regulation, NFATC2 seems only competing
 }
 Node TIM3 {
-//Type: Receptor
+//Function: Receptor
   logic = (NFATC1);
   rate_up = @logic ? $u_TIM3 : 0;
   rate_down = @logic ? 0 : $d_TIM3;
 }
 Node PD1 {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & PD1_tum & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
   logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
   rate_up = @logic ? $u_PD1 : 0;
   rate_down = @logic ? 0 : $d_PD1;
 }
 Node KLRG1 {
-//Type: Receptor
+//Function: Receptor
   logic = (!TCF1);
   rate_up = @logic ? $u_KLRG1 : 0;
   rate_down = @logic ? 0 : $d_KLRG1;
@@ -366,7 +370,7 @@ Node Epigenetic {
 //  rate_down = @logic ? 0 : $d_PD1_tum;
 //}
 Node FAS {
-//Type: Receptor
+//Function: Receptor
 //Deprecated: logic = Tum | (TCell & IFNgR) ; //seems that IFNg on FAS act only in TCell
   logic = (TCell & IFNgR) ;
   rate_up = @logic ? $u_FAS : 0;
@@ -425,14 +429,14 @@ Node Cytogran {
   rate_down = @logic ? 0 : $d_Cytogran;
 }
 Node Death {
-//Type: State
+//Function: State
 //Deprecated: logic = (!FAS_FASL & !GZMB & Perforin) | (!FAS_FASL & GZMB) | (FAS_FASL);
   logic = CASP | TExh ;
   rate_up = @logic ? $u_Death : 0;
   rate_down = @logic ? 0 : $d_Death;
 }
 Node Prolif {
-//Type: State
+//Function: State
   logic = (MYC);
   rate_up = @logic ? $u_Prolif : 0;
   rate_down = 0;

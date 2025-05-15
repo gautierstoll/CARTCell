@@ -1,6 +1,6 @@
 death = Death;
 division = Prolif;
-steps = 48;
+steps = 256;
 
 $u_R_4_1BB u= p[(CD137L) = 1];
 $u_IFNgR u= p[(IFNg) = 1];
