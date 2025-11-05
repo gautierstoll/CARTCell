@@ -117,155 +117,63 @@ Node Exhaustion {
 
 
 //
-// Common nodes in CD8_Tum model
+// Common nodes in CD8_Tum/CD4 model, conflict solved
 //
+
+//Solution
 Node AKT {
-  logic = (PI3K & !SHP2);
-  rate_up = @logic ? $u_AKT : 0;
-  rate_down = @logic ? 0 : $d_AKT;
+//Source: for SHP2, PMID: 15040005
+	logic = (PDK1 & !SHP2);
+	rate_up = @logic ? $u_AKT : 0;
+	rate_down = @logic ? 0 : $d_AKT;
 }
+
+//Solution
+Node AP1 {
+	logic = ((FOS AND JUN) AND NOT BACH2);
+	rate_up = @logic ? $u_AP1 : 0;
+	rate_down = @logic ? 0 : $d_AP1;
+}
+//
+
+//Solution
 Node BACH2 {
 //Function: TrReg
-  logic = (AKT & !EZH2);
+  logic = (AKT & !EZH2) & FOXO1;
   rate_up = @logic ? $u_BACH2 : 0;
   rate_down = @logic ? 0 : $d_BACH2;
 }
-Node NFkB {
-//Function: TrReg
-//Type: Complex
-  logic = (PKCtheta);
-  rate_up = @logic ? $u_NFkB : 0;
-  rate_down = @logic ? 0 : $d_NFkB;
-}
-Node FOXO1 {
-//Function: TrReg
-  logic = (!AKT & !EZH2 & !IL2R & !IL12R);
-  rate_up = @logic ? $u_FOXO1 : 0;
-  rate_down = @logic ? 0 : $d_FOXO1;
-}
-Node AP1 {
-//Function: TrReg
-//Deprecated: logic = (!AKT & !MAPK & PKCtheta) | (!AKT & MAPK) | (AKT);
-  logic = PKCtheta | MAPK | AKT;   // same logic
-  rate_up = @logic ? $u_AP1 : 0;
-  rate_down = @logic ? 0 : $d_AP1;
-}
-Node IFNg {
-//Function: Ligand
-//Deprecated: logic = (!BACH2 & !TBET_ZEB2 & EOMES) | (!BACH2 & TBET_ZEB2);
-  logic = !BACH2 & (EOMES | TBET_ZEB2); // same logic
-  rate_up = @logic ? $u_IFNg : 0;
-  rate_down = @logic ? 0 : $d_IFNg;
-}
-Node IFNgR {
-//Function: Receptor
-  rate_up =  $u_IFNgR ;
-  rate_down = $d_IFNgR;
-}
+
+//Solution
 Node BLIMP1 {
-//Function: TrReg
-  logic = (!BACH2 & !BCL6 & IL2R);
-  rate_up = @logic ? $u_BLIMP1 : 0;
-  rate_down = @logic ? 0 : $d_BLIMP1;
+//Effect of IL2R on BLIMP2 is not evident
+	logic = (((EGR2 OR KLF2)) AND NOT BACH2 AND NOT BCL6);
+	rate_up = @logic ? $u_BLIMP1 : 0;
+	rate_down = @logic ? 0 : $d_BLIMP1;
 }
-Node TIGIT {
-//Function: Receptor
-//Deprecated: logic = (!BLIMP1 & !IL2R & IL15R) | (!BLIMP1 & IL2R) | (BLIMP1);
-  logic = (IL15R | IL2R | BLIMP1);  // same logic
-  rate_up = @logic ? $u_TIGIT : 0;
-  rate_down = @logic ? 0 : $d_TIGIT;
-}
-Node TCR {
-//Function: Receptor
-//Deprecated: logic = (!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1);
-//Deprecated: logic = TCell & ((!TCR & !BTLA & !CTLA4 & !TIM3 & !PD1 & scFv) | (TCR & !BTLA & !CTLA4 & !TIM3 & !PD1));
-  logic = TCell & !BTLA & !CTLA4 & !TIM3 & !PD1 & (scFv | TCR ); // same logic
-  rate_up = @logic ? $u_TCR : 0;
-  rate_down = @logic ? 0 : $d_TCR;
-}
-Node RAS {
-//Deprecated: logic = (!GRB2_SOS & PLCgamma) | (GRB2_SOS);
-  logic = (PLCgamma | GRB2_SOS); // same logic
-  rate_up = @logic ? $u_RAS : 0;
-  rate_down = @logic ? 0 : $d_RAS;
-}
-Node PI3K {
-  logic = (TCR);
-  rate_up = @logic ? $u_PI3K : 0;
-  rate_down = @logic ? 0 : $d_PI3K;
-}
+
+//Solution
 Node CTLA4 {
-//Function: Receptor
-//Deprecated: logic = (!NFATC2 & !NFATC1 & CART) | (!NFATC2 & NFATC1) | (NFATC2);
-  logic = (CART | NFATC1 | NFATC2); // same logic
-  rate_up = @logic ? $u_CTLA4 : 0;
-  rate_down = @logic ? 0 : $d_CTLA4;
-}
+	logic = (FOXP3 AND (NFATC1 | NFATC2));
+	rate_up = @logic ? $u_CTLA4 : 0;
+	rate_down = @logic ? 0 : $d_CTLA4;
+	}
+
+//Solution
 Node EGR2 {
-//Function: TrReg TF
-  logic = (MAPK);
-  rate_up = @logic ? $u_EGR2 : 0;
-  rate_down = @logic ? 0 : $d_EGR2;
+	logic = (MAPK | STAT3);
+	rate_up = @logic ? $u_EGR2 : 0;
+	rate_down = @logic ? 0 : $d_EGR2;
 }
-Node TBET_ZEB2 {
-//Function: TrReg
-//Deprecated: logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
-  logic = !EGR2 & (IL21R | IL12R | TBET_ZEB2); // same logic
-  rate_up = @logic ? $u_TBET_ZEB2 : 0;
-  rate_down = @logic ? 0 : $d_TBET_ZEB2;
-}
-Node LAG3 {
-//Function: Receptor
-//Deprecated: logic = (!EGR2 & NFATC1) | (EGR2);
-  logic = (NFATC1 | EGR2); //same logic
-  rate_up = @logic ? $u_LAG3 : 0;
-  rate_down = @logic ? 0 : $d_LAG3;
-}
+
+//Solution, NFkB and EZH2 are probably indirect effects
 Node EOMES {
-//Function: TrReg
-  logic = (NFkB & !EZH2);
-  rate_up = @logic ? $u_EOMES : 0;
-  rate_down = @logic ? 0 : $d_EOMES;
+	logic = (((RUNX3 AND NOT GATA3)) OR TCF7);
+	rate_up = @logic ? $u_EOMES : 0;
+	rate_down = @logic ? 0 : $d_EOMES;
 }
-Node GZMB {
-//Function: Ligand
-//Deprecated: logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
-  logic = (EOMES | TBET_ZEB2); // same logic
-  rate_up = @logic ? $u_GZMB : 0;
-  rate_down = @logic ? 0 : $d_GZMB;
-}
-Node MYC {
-//Function: TrReg
-//Deprecated: logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
-  logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
-  rate_up = @logic ? $u_MYC : 0;
-  rate_down = @logic ? 0 : $d_MYC;
-}
-Node IL2R {
-//Function: Receptor
-  logic = (!NFkB & AP1 & !ID3) | (NFkB & !ID3);
-  rate_up = @logic ? $u_IL2R : 0;
-  rate_down = @logic ? 0 : $d_IL2R;
-}
-Node IL12R {
-//Function: Receptor
-  logic = (!NFATC2 & IL12R);
-  rate_up = @logic ? $u_IL12R : 0;
-  rate_down = @logic ? 0 : $d_IL12R;
-}
-Node TIM3 {
-//Function: Receptor
-  logic = (NFATC1);
-  rate_up = @logic ? $u_TIM3 : 0;
-  rate_down = @logic ? 0 : $d_TIM3;
-}
-Node PD1 {
-//Function: Receptor
-//Deprecated: logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & PD1_tum & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
-  logic = (!NFATC2 & !TBET_ZEB2 & !NFATC1 & CART) | (!NFATC2 & !TBET_ZEB2 & NFATC1) | (NFATC2 & !TBET_ZEB2);
-  rate_up = @logic ? $u_PD1 : 0;
-  rate_down = @logic ? 0 : $d_PD1;
-}
+
+//Solution
 Node FAS {
 //Function: Receptor
 //Deprecated: logic = Tum | (TCell & IFNgR) ; //seems that IFNg on FAS act only in TCell
@@ -273,194 +181,179 @@ Node FAS {
   rate_up = @logic ? $u_FAS : 0;
   rate_down = @logic ? 0 : $d_FAS;
 }
-Node GRB2_SOS { //
-  logic = (TCR);
-  rate_up = @logic ? $u_GRB2_SOS : 0;
-  rate_down = @logic ? 0 : $d_GRB2_SOS;
+
+//Solution
+Node FOXO1 {
+//Function: TrReg
+//AKT is well knonw, mTOR is synergic, ILR are indirect and EZH@ is in PMID: 31410199
+  logic = (!AKT & !EZH2);
+  rate_up = @logic ? $u_FOXO1 : 0;
+  rate_down = @logic ? 0 : $d_FOXO1;
 }
-Node PKCtheta { //
-  logic = (!AKT & !EGR2 & PLCgamma) | (!AKT & EGR2) | (AKT);
-  rate_up = @logic ? $u_PKCtheta : 0;
-  rate_down = @logic ? 0 : $d_PKCtheta;
+
+// Solution
+Node GRB2 {
+ logic = ((LAT OR CD28) OR TEG28 OR TCR);
+ rate_up = @logic ? $u_GRB2 : 0;
+ 	rate_down = @logic ? 0 : $d_GRB2;
 }
-Node SHP1 {
-  logic = (PD1);
-  rate_up = @logic ? $u_SHP1 : 0;
-  rate_down = @logic ? 0 : $d_SHP1;
+//
+
+// Solution. Not very well documented, EOMES/TBET_ZEB2 are transcription factors.
+Node GZMB {
+//Function: Ligand
+//Deprecated: logic = (!TBET_ZEB2 & EOMES) | (TBET_ZEB2);
+  logic = (EOMES | TBET_ZEB2) | (RUNX3 AND NOT TCF7); // same logics dro
+  rate_up = @logic ? $u_GZMB : 0;
+  rate_down = @logic ? 0 : $d_GZMB;
 }
-Node ZAP70 {
-  logic = (RAS & !SHP2 & !SHP1);
-  rate_up = @logic ? $u_ZAP70 : 0;
-  rate_down = @logic ? 0 : $d_ZAP70;
+
+// Solution
+Node IFNg {
+	logic = ((STAT4 AND TBET) OR (RUNX3 AND EOMES) OR (AP1 AND ATF2) OR NFAT) AND (NOT GATA3) AND (NOT FOXO1) AND (NOT BACH2);
+	rate_up = @logic ? $u_IFNg : 0;
+	rate_down = @logic ? 0 : $d_IFNg;
 }
+
+// Solution
+Node IFNgR {
+//Function: Receptor
+  rate_up =  $u_IFNgR ;
+  rate_down = $d_IFNgR;
+}
+
+// Solution
+Node IL12R {
+//Function: Receptor
+  logic = (!NFATC2 & IL12R);
+  rate_up = @logic ? $u_IL12R : 0;
+  rate_down = @logic ? 0 : $d_IL12R;
+}
+
+// Solution hard to separate IL2 and IL2R, replace IL2Ra by IL2R
+Node IL2R {
+	//logic = IL2_L;
+	logic = (((STAT5 OR ((NFAT AND FOXP3))) OR NFKB));
+	rate_up = $u_IL2R;
+	rate_down = $d_IL2R;
+}
+// Solution, EGR2 has lag3 as target
+Node LAG3 {
+	logic = ((EGR2) OR ((MAF AND BLIMP1)) OR (((NFAT AND NOT AP1) AND NOT FOXP3)));
+	rate_up = @logic ? $u_LAG3 : 0;
+	rate_down = @logic ? 0 : $d_LAG3;
+}
+
+// Solution
 Node LAT {
-  logic = (!PD1 & ZAP70) | (PD1);
+  logic = (ZAP70) | (PD1);
   rate_up = @logic ? $u_LAT : 0;
   rate_down = @logic ? 0 : $d_LAT;
 }
-Node PLCgamma {
-  logic = (LAT);
-  rate_up = @logic ? $u_PLCgamma : 0;
-  rate_down = @logic ? 0 : $d_PLCgamma;
+
+// Solution
+Node MYC {
+//Function: TrReg
+//Deprecated: logic = (!MTOR & HIF1A & !NIBcomp) | (MTOR & !NIBcomp);
+  logic = (!mTORC1 & HIF1A & !NIBcomp) | (mTORC1 & !NIBcomp);
+  rate_up = @logic ? $u_MYC : 0;
+  rate_down = @logic ? 0 : $d_MYC;
 }
 
+// Solution, fusion seems to be AND, PKC  through IKK
+Node NFkB {
+//Function: TrReg
+//Type: Complex
+  logic = (PKCtheta AND (NOT IkBa));
+  rate_up = @logic ? $u_NFkB : 0;
+  rate_down = @logic ? 0 : $d_NFkB;
+}
 
-//
-// Common nodes in CD4 model
-//
-Node SHP1 {
-	logic = (GRB2 AND LAT);
-	rate_up = @logic ? $u_SHP1 : 0;
-	rate_down = @logic ? 0 : $d_SHP1;
+// Solution
+Node PD1 {
+//Deprecated:	logic = ((AP1 AND NOT NFAT) OR (MAF AND BLIMP1) OR (NFAT AND NOT AP1 AND NOT FOXP3 AND NOT BLIMP1)) AND NOT TBET;
+    logic = ((AP1 AND NOT (NFATC1| NFATC2 | CART)) OR (MAF AND BLIMP1) OR ((NFATC1| NFATC2 | CART) AND NOT AP1 AND NOT FOXP3 AND NOT BLIMP1)) AND NOT TBET_ZEB2;
+	rate_up = @logic ? $u_PD1 : 0;
+	rate_down = @logic ? 0 : $d_PD1;
 }
-Node abTCR {
-	//logic = ((pMHCII AND LCK) AND NOT ((SHP1 AND THEMIS)));
-	logic = (LCK AND NOT ((SHP1 AND THEMIS)));
-	rate_up = @logic ? $u_abTCR : 0;
-	rate_down = @logic ? 0 : $d_abTCR;
-}
-Node gdTCR {
-	//logic = (surfAnt AND LCK);
-	logic = (LCK);
-	rate_up = @logic ? $u_gdTCR : 0;
-	rate_down = @logic ? 0 : $d_gdTCR;
-}
-Node ZAP70 {
-	logic = ((((gdTCR OR abTCR) OR CAR)) AND NOT SHP1);
-	rate_up = @logic ? $u_ZAP70 : 0;
-	rate_down = @logic ? 0 : $d_ZAP70;
-}
-Node LAT {
-	logic = ZAP70;
-	rate_up = @logic ? $u_LAT : 0;
-	rate_down = @logic ? 0 : $d_LAT;
-}
+
+// Solution, PI#K is activvated by the co-receptor cd29
 Node PI3K {
 	logic = ((CD28 OR TEG28) OR IL2R);
 	rate_up = @logic ? $u_PI3K : 0;
 	rate_down = @logic ? 0 : $d_PI3K;
 }
-Node BLIMP1 {
-	logic = (((EGR2 OR KLF2)) AND NOT BACH2);
-	rate_up = @logic ? $u_BLIMP1 : 0;
-	rate_down = @logic ? 0 : $d_BLIMP1;
+// Solution (EGR2) is probably indirect
+Node PKCt {
+	logic = PLCG | AKT;
+	rate_up = @logic ? $u_PKCt : 0;
+	rate_down = @logic ? 0 : $d_PKCt;
 }
-Node BACH2 {
-	logic = FOXO1;
-	rate_up = @logic ? $u_BACH2 : 0;
-	rate_down = @logic ? 0 : $d_BACH2;
+
+// Solution (the AND may be a little strict ?)
+ode PLCgamma {
+  logic = (LAT AND ITK);
+  rate_up = @logic ? $u_PLCgamma : 0;
+  rate_down = @logic ? 0 : $d_PLCgamma;
 }
-Node AP1 {
-	logic = ((FOS AND JUN) AND NOT BACH2);
-	rate_up = @logic ? $u_AP1 : 0;
-	rate_down = @logic ? 0 : $d_AP1;
-}
-Node NFKB {
-	logic = NOT IkBa;
-	rate_up = @logic ? $u_NFKB : 0;
-	rate_down = @logic ? 0 : $d_NFKB;
-}
-Node FOXO1 {
-	logic = NOT ((mTORC2 AND AKT));
-	rate_up = @logic ? $u_FOXO1 : 0;
-	rate_down = @logic ? 0 : $d_FOXO1;
-}
-Node ncNFKB {
-	logic = (TRAF1 AND cIAP);
-	rate_up = @logic ? $u_ncNFKB : 0;
-	rate_down = @logic ? 0 : $d_ncNFKB;
-}
-Node AKT {
-	logic = PDK1;
-	rate_up = @logic ? $u_AKT : 0;
-	rate_down = @logic ? 0 : $d_AKT;
-}
+
+// Solution
 Node RAS {
-	logic = SOS;
-	rate_up = @logic ? $u_RAS : 0;
-	rate_down = @logic ? 0 : $d_RAS;
+//Deprecated: logic = (!GRB2_SOS & PLCgamma) | (GRB2_SOS);
+  logic = (PLCgamma | SOS); // same logic
+  rate_up = @logic ? $u_RAS : 0;
+  rate_down = @logic ? 0 : $d_RAS;
 }
-Node CTLA4 {
-	logic = (CD80_86 AND ((FOXP3 AND NFAT)));
-	rate_up = @logic ? $u_CTLA4 : 0;
-	rate_down = @logic ? 0 : $d_CTLA4;
+
+// Solution
+Node SHP1 {
+	logic = PD1 OR (GRB2 AND LAT);
+	rate_up = @logic ? $u_SHP1 : 0;
+	rate_down = @logic ? 0 : $d_SHP1;
 }
-Node IL2R {
-	//logic = IL2_L;
-	rate_up = $u_IL2R;
-	rate_down = $d_IL2R;
+
+// Solution
+Node TBET_ZEB2 {
+//Function: TrReg
+//Deprecated: logic = (!EGR2 & !TBET_ZEB2 & !IL12R & IL21R) | (!EGR2 & !TBET_ZEB2 & IL12R) | (!EGR2 & TBET_ZEB2);
+  logic = STAT1 & !EGR2 & (IL21R | IL12R | TBET_ZEB2); // same logic
+  rate_up = @logic ? $u_TBET_ZEB2 : 0;
+  rate_down = @logic ? 0 : $d_TBET_ZEB2;
+
+// Solution, keep BTLA,
+Node abTCR {
+	//logic = ((pMHCII AND LCK) AND NOT ((SHP1 AND THEMIS)));
+	logic = LCK AND NOT (SHP1 AND THEMIS) & !BTLA & (scFv | TCR );
+	rate_up = @logic ? $u_abTCR : 0;
+	rate_down = @logic ? 0 : $d_abTCR;
 }
-Node IL12R {
-	//logic = IL12_L;
-	rate_up = $u_IL12R;
-	rate_down = $d_IL12R;
+Node gdTCR {
+	//logic = (surfAnt AND LCK);
+	logic = (LCK) & !BTLA & (scFv | TCR );
+	rate_up = @logic ? $u_gdTCR : 0;
+	rate_down = @logic ? 0 : $d_gdTCR;
 }
-Node IFNGR {
-	logic = 1;
-	rate_up = @logic ? $u_IFNGR : 0;
-	rate_down = @logic ? 0 : $d_IFNGR;
-}
-Node EOMES {
-	logic = (((RUNX3 AND NOT GATA3)) OR TCF7);
-	rate_up = @logic ? $u_EOMES : 0;
-	rate_down = @logic ? 0 : $d_EOMES;
-}
-Node IFNg {
-	logic = ((((((((STAT4 AND TBET)) OR ((RUNX3 AND EOMES))) OR ((AP1 AND ATF2))) OR NFAT)) AND NOT GATA3) AND NOT FOXO1);
-	rate_up = @logic ? $u_IFNg : 0;
-	rate_down = @logic ? 0 : $d_IFNg;
-}
-Node IL2Ra {
-	logic = (((STAT5 OR ((NFAT AND FOXP3))) OR NFKB));
-	rate_up = @logic ? $u_IL2Ra : 0;
-	rate_down = @logic ? 0 : $d_IL2Ra;
-}
-Node EGR2 {
-	logic = STAT3;
-	rate_up = @logic ? $u_EGR2 : 0;
-	rate_down = @logic ? 0 : $d_EGR2;
-}
-Node PD1 {
-	logic = ((((((AP1 AND NOT NFAT)) OR ((MAF AND BLIMP1))) OR ((((NFAT AND NOT AP1) AND NOT FOXP3) AND NOT BLIMP1)))) AND NOT TBET);
-	rate_up = @logic ? $u_PD1 : 0;
-	rate_down = @logic ? 0 : $d_PD1;
-}
-Node TIM3 {
-	logic = ((((BLIMP1 AND MAF)) OR ((NFIL3 AND TBET))) OR (((NFAT AND NOT AP1) AND NOT FOXP3)));
-	rate_up = @logic ? $u_TIM3 : 0;
-	rate_down = @logic ? 0 : $d_TIM3;
-}
-Node LAG3 {
-	logic = (((MAF AND BLIMP1)) OR (((NFAT AND NOT AP1) AND NOT FOXP3)));
-	rate_up = @logic ? $u_LAG3 : 0;
-	rate_down = @logic ? 0 : $d_LAG3;
-}
+
+// Solution, MAF and BLIMP1 activate TIGIT transcriptionnaly. TIGIT is a receptor
 Node TIGIT {
 	logic = (MAF AND BLIMP1);
 	rate_up = @logic ? $u_TIGIT : 0;
 	rate_down = @logic ? 0 : $d_TIGIT;
 }
-Node GZMB {
-	logic = (RUNX3 AND NOT TCF7);
-	rate_up = @logic ? $u_GZMB : 0;
-	rate_down = @logic ? 0 : $d_GZMB;
-}
-Node cMYC {
-	logic = (mTORC1 AND ERK);
-	rate_up = @logic ? $u_cMYC : 0;
-	rate_down = @logic ? 0 : $d_cMYC;
-}
-Node FAS_L {
-	logic = FAS_L;
-	rate_up = @logic ? $u_FAS_L : 0;
-	rate_down = @logic ? 0 : $d_FAS_L;
-}
-Node FAS {
-	// logic = FAS_L;
-	rate_up = $u_FAS;
-	rate_down = $d_FAS;
+
+// Solution
+Node TIM3 {
+	logic = ((((BLIMP1 AND MAF)) OR ((NFIL3 AND TBET))) OR (((NFATC2 AND NOT AP1) AND NOT FOXP3)));
+	rate_up = @logic ? $u_TIM3 : 0;
+	rate_down = @logic ? 0 : $d_TIM3;
 }
 
+//Solution (activation through RAS is not obious)
+
+Node ZAP70 {
+	logic = ((((gdTCR OR abTCR)) AND !SHP1 AND !SHP1);
+	rate_up = @logic ? $u_ZAP70 : 0;
+	rate_down = @logic ? 0 : $d_ZAP70;
 
 //
 // Extra nodes in CD8_Tum model
